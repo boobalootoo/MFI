@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Router Request Animation</title>
+    <style>
+        body {
+            background-color: black;
+            margin: 0;
+            font-family: monospace;
+            color: green;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Wrapper for the entire stack and trolley, to move it left to right */
+        .container {
+            position: absolute;
+            display: flex;
+            align-items: flex-end;
+            bottom: 40px;
+            left: 0;
+            animation: moveLeftToRight 5s linear forwards;
+            animation-timing-function: linear;
+        }
+
+        @keyframes moveLeftToRight {
+            from { left: 0; }
+            to { left: 40%; }
+        }
+
+        /* Trolley with Stacked Boxes */
+        .trolley-stack {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: -5px;
+        }
+
+        /* Box styling */
+        .box {
+            width: 50px;
+            height: 50px;
+            background-color: green;
+            color: black;
+            border: 1px solid black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 2px;
+            position: relative;
+        }
+
+        .box .label {
+            color: black;
+            font-size: 14px;
+        }
+
+        /* Flatbed trolley underneath the boxes */
+        .trolley {
+            width: 250px;
+            height: 50px;
+            background-color: green;
+            border: 2px solid black;
+            position: relative;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 0;
+            z-index: 0;
+        }
+
+        .trolley-text {
+            position: absolute;
+            top: 5px;
+            color: black;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* Trolley wheels */
+        .wheel {
+            width: 25px;
+            height: 25px;
+            background-color: green;
+            border: 2px solid black;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -15px;
+        }
+
+        .wheel.left {
+            left: 30px;
+        }
+
+        .wheel.right {
+            right: 30px;
+        }
+
+        /* Router Label Section */
+        .router-text {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: green;
+            font-size: 16px;
+            font-weight: bold;
+            z-index: 2;
+        }
+
+        /* Calculating Route Text */
+        .calculating-text {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: green;
+            font-size: 14px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            z-index: 2;
+        }
+
+        .calculating-text.show {
+            opacity: 1;
+        }
+
+        /* Road sign arrow for IP address */
+        .road-sign {
+            width: 100px;
+            height: 50px;
+            background-color: green;
+            border: 2px solid black;
+            color: black;
+            font-weight: bold;
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: left 0.5s ease-in-out, opacity 0.5s ease-in-out; /* Short transition */
+            opacity: 0;
+            z-index: 2;
+        }
+
+        .road-sign.show {
+            left: 60%;
+            opacity: 1;
+        }
+
+        .road-sign-text {
+            color: black;
+            font-size: 12px;
+        }
+
+        /* Arrow pointing right */
+        .arrow-right {
+            position: absolute;
+            top: calc(50% + 70px);
+            left: 100%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 20px solid green;
+            opacity: 0;
+            transition: left 0.5s ease-in-out, opacity 0.5s ease-in-out; /* Short transition */
+            z-index: 2;
+        }
+
+        .arrow-right.show {
+            left: 65%;
+            opacity: 1;
+        }
+
+        /* Explanation Text Styles */
+        .explanation-text {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: green;
+            font-size: 16px;
+            font-weight: bold;
+            z-index: 2;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 2px solid green;
+            animation: type 4s steps(50, end), blink-caret .75s step-end infinite;
+        }
+
+        @keyframes type {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: green; }
+        }
+
+        /* Trolley continuation animation */
+        @keyframes moveTrolleyContinuation {
+            from { left: 40%; }
+            to { left: 100%; }
+        }
+
+    </style>
+    <script>
+    window.addEventListener('load', () => {
+        const container = document.querySelector('.container');
+        const calculatingText = document.querySelector('.calculating-text');
+        const roadSign = document.querySelector('.road-sign');
+        const arrowRight = document.querySelector('.arrow-right');
+
+        container.addEventListener('animationend', () => {
+            calculatingText.classList.add('show');
+
+            setTimeout(() => {
+                roadSign.classList.add('show');
+                arrowRight.classList.add('show');
+
+                // Begin continuation movement
+                setTimeout(() => {
+                    container.style.animationName = 'moveTrolleyContinuation';
+                    container.style.animationDuration = '2.5s';
+                    container.style.animationTimingFunction = 'linear';
+                    container.style.animationIterationCount = '1';
+
+                    // Redirect 1s after continuation animation ends (2.5s + 1s)
+                    setTimeout(() => {
+                        window.location.href = 'unpacking.html';
+                    }, 3500); // 2.5s + 1s
+                }, 1000); // 1s after sign/arrow show
+            }, 2000); // 2s after first animation ends
+        });
+    });
+</script>
+
+</head>
+<body>
+    <div class="explanation-text">Your request (split into packets) is being sent to the IP address, a router finds the quickest way through the network.</div>
+
+    <div class="container">
+        <div class="trolley-stack">
+            <div class="row">
+                <div class="box"><div class="label">Packet 1</div></div>
+            </div>
+            <div class="row">
+                <div class="box"><div class="label">Packet 2</div></div>
+                <div class="box"><div class="label">Packet 3</div></div>
+            </div>
+            <div class="row">
+                <div class="box"><div class="label">Packet 4</div></div>
+                <div class="box"><div class="label">Packet 5</div></div>
+                <div class="box"><div class="label">Packet 6</div></div>
+            </div>
+            <div class="row">
+                <div class="box"><div class="label">Packet 7</div></div>
+                <div class="box"><div class="label">Packet 8</div></div>
+                <div class="box"><div class="label">Packet 9</div></div>
+                <div class="box"><div class="label">Packet 10</div></div>
+            </div>
+            <div class="trolley">
+                <div class="trolley-text">Request for 192.0.2.1</div>
+                <div class="wheel left"></div>
+                <div class="wheel right"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="router-text">ROUTER</div>
+
+    <div class="calculating-text">Calculating best route...</div>
+
+    <div class="road-sign">
+        <div class="road-sign-text">192.0.2.1</div>
+    </div>
+
+    <div class="arrow-right"></div>
+
+</body>
+</html>

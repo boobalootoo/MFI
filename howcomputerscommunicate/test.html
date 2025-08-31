@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Learn How Coding Works</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      height: 100vh;
+      font-family: sans-serif;
+    }
+    #sidebar {
+      width: 50%;
+      border-right: 2px solid #ccc;
+      display: flex;
+      flex-direction: column;
+    }
+    #tabs {
+      display: flex;
+      background: #eee;
+    }
+    .tab {
+      padding: 10px;
+      cursor: pointer;
+      border-right: 1px solid #ccc;
+    }
+    .tab.active {
+      background: #ddd;
+      font-weight: bold;
+    }
+    #code {
+      flex-grow: 1;
+      padding: 10px;
+      overflow: auto;
+      white-space: pre-wrap;
+      background: #f8f8f8;
+    }
+    iframe {
+      width: 50%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+<div id="sidebar">
+  <div id="tabs"></div>
+  <pre id="code">Loading...</pre>
+</div>
+<iframe id="preview"></iframe>
+
+<script>
+  const files = {
+    "index.html": "howcomputerscommunicate/index.html",
+    "packetanimation.html": "howcomputerscommunicate/packetanimation.html",
+    "packets.html": "howcomputerscommunicate/packets.html",
+    "router.html": "howcomputerscommunicate/router.html",
+    "server.html": "howcomputerscommunicate/server.html",
+    "end.html": "howcomputerscommunicate/end.html",
+    "unpacking.html": "howcomputerscommunicate/unpacking.html"
+  };
+
+  const tabs = document.getElementById('tabs');
+  const code = document.getElementById('code');
+  const preview = document.getElementById('preview');
+
+  function setActive(tabName, filePath) {
+    // Highlight tab
+    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+    document.getElementById(tabName).classList.add('active');
+
+    // Load code
+    fetch(filePath)
+      .then(res => res.text())
+      .then(text => {
+        code.textContent = text;
+        preview.src = filePath;
+      });
+  }
+
+  // Create tabs
+  for (let file in files) {
+    const btn = document.createElement('div');
+    btn.className = 'tab';
+    btn.id = file;
+    btn.textContent = file;
+    btn.onclick = () => setActive(file, files[file]);
+    tabs.appendChild(btn);
+  }
+
+  // Load first file by default
+  const firstFile = Object.keys(files)[0];
+  setActive(firstFile, files[firstFile]);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Computer Quest: Get the Webpage!</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1e1e2f;
+      color: white;
+      margin: 0;
+      padding: 20px;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    #game-screen {
+      max-width: 700px;
+      margin: auto;
+      background: #2e2e3e;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    #browser-box {
+      background-color: white;
+      padding: 10px;
+      border-radius: 5px;
+      color: black;
+      font-family: monospace;
+      margin-bottom: 20px;
+    }
+    .button {
+      padding: 10px 20px;
+      margin: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #45a049;
+    }
+    #mission-text {
+      margin-bottom: 20px;
+    }
+    #timer {
+      text-align: right;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-screen">
+    <h1>🕵️‍♂️ Mission: Fetch the Webpage</h1>
+    <div id="timer">Time: 0s</div>
+
+    <div id="mission-text">
+      <p>You're a computer. Your user has typed a web address into the browser. Start your mission!</p>
+    </div>
+
+    <div id="browser-box">https://example.com</div>
+
+    <button class="button" onclick="nextStage()">Start Mission</button>
+  </div>
+
+  <script>
+    let stage = 0;
+    let time = 0;
+    let timerInterval = setInterval(() => {
+      time++;
+      document.getElementById('timer').innerText = `Time: ${time}s`;
+    }, 1000);
+
+    const stages = [
+      {
+        text: "Step 1: DNS Lookup\nYou need to translate the URL to an IP address. Choose the right DNS server:",
+        choices: ["Google DNS (8.8.8.8)", "Mystery DNS (123.456.789.0)", "Broken DNS (0.0.0.0)"],
+        correct: 0
+      },
+      {
+        text: "Step 2: Packetize the Request\nClick to break the data into packets:",
+        choices: ["Packetize!", "Don't Packetize", "Send whole thing"],
+        correct: 0
+      },
+      {
+        text: "Step 3: Send the Packets\nWhich medium will you use to transmit?",
+        choices: ["Wireless (Wi-Fi)", "Carrier Pigeon", "Smoke Signals"],
+        correct: 0
+      },
+      {
+        text: "Step 4: Routing\nPick the best router to send your data through:",
+        choices: ["Router A (Low Latency)", "Router B (Goes in circles)", "Router C (Offline)",],
+        correct: 0
+      },
+      {
+        text: "Step 5: Protocol Control\nUse a protocol to control how packets are delivered:",
+        choices: ["TCP/IP", "No rules", "Random Delivery"],
+        correct: 0
+      },
+      {
+        text: "Step 6: Reassemble Packets\nClick to reassemble the webpage:",
+        choices: ["Reassemble"],
+        correct: 0
+      },
+      {
+        text: "Step 7: Response\nThe webpage responds. What should you do?",
+        choices: ["Show it to the user!", "Ignore it", "Delete it"],
+        correct: 0
+      }
+    ];
+
+    function nextStage(choice) {
+      const game = document.getElementById("game-screen");
+
+      if (stage < stages.length) {
+        const current = stages[stage];
+        let html = `<p>${current.text}</p>`;
+        current.choices.forEach((option, index) => {
+          html += `<button class="button" onclick="checkAnswer(${index})">${option}</button>`;
+        });
+        game.innerHTML = `
+          <h1>🕵️‍♂️ Mission: Fetch the Webpage</h1>
+          <div id="timer">Time: ${time}s</div>
+          <div id="mission-text">${html}</div>
+        `;
+      } else {
+        clearInterval(timerInterval);
+        game.innerHTML = `
+          <h1>✅ Mission Complete!</h1>
+          <p>You successfully fetched the webpage in ${time} seconds.</p>
+          <button class="button" onclick="location.reload()">Play Again</button>
+        `;
+      }
+    }
+
+    function checkAnswer(index) {
+      if (index === stages[stage].correct) {
+        stage++;
+        nextStage();
+      } else {
+        alert("Wrong choice! Try again.");
+      }
+    }
+  </script>
+</body>
+</html>

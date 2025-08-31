@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Server Response</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: black;
+      color: green;
+      font-family: monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      overflow-y: auto;
+      height: 100vh;
+      justify-content: flex-start;
+    }
+
+    .typed-message {
+      color: green;
+      font-size: 18px;
+      white-space: pre-wrap;
+      text-align: center;
+      max-width: 100%;
+      margin-bottom: 20px;
+      padding: 0 20px;
+      position: relative;
+      top: 0;
+    }
+
+    #serverImage {
+      width: 60%;  /* Adjusted size for image */
+      height: auto;
+      max-width: 100%;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="typed-message" id="serverMessage"></div>
+  <img id="serverImage" src="server.png" alt="Server" />
+
+  <script>
+    const message = "Now that you have reassembled your request you can give the server your order. They will give you the packets needed to assemble the webpage.";
+    let i = 0;
+
+    function typeServerMessage() {
+      if (i < message.length) {
+        document.getElementById("serverMessage").textContent += message.charAt(i);
+        i++;
+        setTimeout(typeServerMessage, 30);
+      } else {
+        // Wait 2 seconds after typing finishes
+        setTimeout(() => {
+          window.location.href = "end.html";
+        }, 2000);
+      }
+    }
+
+    window.onload = function () {
+      const img = document.getElementById("serverImage");
+      if (img.complete) {
+        typeServerMessage();
+      } else {
+        img.onload = typeServerMessage;
+      }
+    };
+  </script>
+</body>
+</html>

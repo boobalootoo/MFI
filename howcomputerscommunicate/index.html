@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNS Translation</title>
+    <style>
+        body {
+            font-family: monospace;
+            background-color: #000000;
+            color: #00FF00;
+            margin: 0;
+            padding: 40px;
+            line-height: 1.6;
+            overflow: hidden;
+            text-shadow: 0 0 8px rgba(0, 255, 0, 0.8);
+            font-size: 24px;
+        }
+
+        #container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px;
+        }
+
+        #text-content {
+            white-space: pre-wrap;
+            overflow: hidden;
+            width: 100%;
+            font-size: 28px;
+        }
+
+        #get-ip-button {
+            display: none;
+            padding: 20px 40px;
+            background-color: #00FF00;
+            color: #000000;
+            border: none;
+            cursor: pointer;
+            margin-top: 40px;
+            font-family: monospace;
+            font-size: 24px;
+        }
+
+        #get-ip-button:hover {
+            background-color: #008000;
+        }
+
+        #ip-address-display {
+            display: none;
+            color: #00FF00;
+            font-size: 24px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #00FF00;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            const container = document.getElementById('text-content');
+            const text = `DNS Translation
+
+The human user has given you an address in their language, you cannot use this to carry out any functions.
+
+Use a Domain Name Server (DNS) to translate it into an IP address you can use to find the website they want.`;
+
+            let i = 0;
+            container.innerHTML = '';
+            const getIpButton = document.getElementById('get-ip-button');
+            const ipAddressDisplay = document.getElementById('ip-address-display');
+
+            function typeWriter() {
+                if (i < text.length) {
+                    container.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 40);
+                } else {
+                    getIpButton.style.display = 'inline-block';
+                }
+            }
+
+            typeWriter();
+
+            getIpButton.addEventListener('click', function () {
+                const simulatedIp = '192.0.2.1';
+                ipAddressDisplay.textContent = `Example IP Address: ${simulatedIp}`;
+                ipAddressDisplay.style.display = 'block';
+
+                // Redirect to packets.html after 3 seconds
+                setTimeout(function () {
+                    window.location.href = './packets.html';
+                }, 3000);
+            });
+        };
+    </script>
+</head>
+<body>
+    <div id="container">
+        <div id="text-content"></div>
+        <button id="get-ip-button">Get IP Address</button>
+        <div id="ip-address-display"></div>
+    </div>
+</body>
+</html>

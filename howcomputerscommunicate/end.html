@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary to Google</title>
+    <style>
+        body {
+            font-family: monospace;
+            background-color: #000;
+            color: #0f0;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            position: relative;
+            transition: background-color 2s ease; /* Add smooth transition for background */
+        }
+        #binary-block {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            background-color: #000;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+            transition: height 2s ease-in-out, clip-path 2s ease-in-out;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+        }
+        .binary-char {
+            color: #0f0;
+            font-size: 0.8em;
+            width: 10px;
+            height: 1em;
+            line-height: 1em;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 100px;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 2s ease; /* Add opacity transition */
+        }
+        #logo {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+        #search-bar {
+            padding: 10px;
+            width: 80%;
+            max-width: 400px;
+            margin-bottom: 20px;
+            background-color: #222;
+            border: 1px solid #555;
+            color: #fff;
+            border-radius: 24px;
+        }
+        #search-button {
+            padding: 10px 20px;
+            background-color: #4285f4;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        #links {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            color: #888;
+        }
+        #links a {
+            color: #888;
+            text-decoration: none;
+        }
+        #links a:hover {
+            color: #fff;
+        }
+        #google-logo {
+            height: 92px;
+            margin-bottom: 20px;
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            createBinaryBlock();
+        };
+
+        function createBinaryBlock() {
+            const blockDiv = document.createElement('div');
+            blockDiv.id = 'binary-block';
+            document.body.appendChild(blockDiv);
+
+            const numChars = (window.innerWidth * window.innerHeight) / 10;
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            for (let i = 0; i < numChars; i++) {
+                const charDiv = document.createElement('div');
+                charDiv.classList.add('binary-char');
+                charDiv.textContent = Math.random() < 0.5 ? '0' : '1';
+                blockDiv.appendChild(charDiv);
+            }
+
+            setTimeout(() => {
+                blockDiv.style.height = '100%';
+                blockDiv.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
+                // After the binary block fills the screen, start transitioning to Google
+                setTimeout(() => {
+                    document.body.style.backgroundColor = '#fff';
+                    blockDiv.style.display = 'none'; // Hide the binary block
+                    showGoogleHomepage();
+                }, 2000); // 2 seconds
+            }, 0);
+        }
+
+        function showGoogleHomepage() {
+            const container = document.createElement('div');
+            container.className = 'container';
+
+            const logo = document.createElement('img');
+            logo.id = 'google-logo';
+            logo.src = 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png';
+            logo.alt = 'Google Logo';
+
+            const searchBar = document.createElement('input');
+            searchBar.type = 'text';
+            searchBar.id = 'search-bar';
+            searchBar.placeholder = 'Search';
+
+            const searchButton = document.createElement('button');
+            searchButton.id = 'search-button';
+            searchButton.textContent = 'Search';
+
+            const linksDiv = document.createElement('div');
+            linksDiv.id = 'links';
+            const imagesLink = document.createElement('a');
+            imagesLink.href = '#';
+            imagesLink.textContent = 'Images';
+            const mapsLink = document.createElement('a');
+            mapsLink.href = '#';
+            mapsLink.textContent = 'Maps';
+            linksDiv.appendChild(imagesLink);
+            linksDiv.innerHTML += ' | ';
+            linksDiv.appendChild(mapsLink);
+
+            container.appendChild(logo);
+            container.appendChild(searchBar);
+            container.appendChild(searchButton);
+            container.appendChild(linksDiv);
+
+            document.body.innerHTML = ''; // Clear the body
+            document.body.appendChild(container);
+
+            // Force opacity to 1 to make the Google elements visible
+            setTimeout(() => {
+                container.style.opacity = '1';
+            }, 0);
+        }
+
+        window.addEventListener('resize', () => {
+            const binaryBlock = document.getElementById('binary-block');
+            if (binaryBlock) {
+                binaryBlock.innerHTML = '';
+                binaryBlock.style.height = '0%';
+                binaryBlock.style.clipPath = 'polygon(0 0, 100% 0, 100% 0, 0 0)';
+                createBinaryBlock();
+            }
+        });
+    </script>
+</head>
+<body>
+    <div id="binary-block"></div>
+</body>
+</html>
