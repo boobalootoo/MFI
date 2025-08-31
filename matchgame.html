@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Computer Communication Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f0f8ff;
+    }
+    h1 {
+      text-align: center;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+    }
+    .step, .box {
+      border: 2px dashed #ccc;
+      padding: 10px;
+      width: 200px;
+      min-height: 60px;
+      text-align: center;
+      background-color: #fff;
+      cursor: grab;
+    }
+    .box.correct {
+      border-color: green;
+      background-color: #e0ffe0;
+    }
+  </style>
+</head>
+<body>
+  <h1>ð» How Computers Communicate (PRAPRUR)</h1>
+  <p>Drag each step to its correct meaning:</p>
+
+  <div class="container">
+    <div class="step" draggable="true" id="Protocol">Protocol</div>
+    <div class="step" draggable="true" id="Request">Request</div>
+    <div class="step" draggable="true" id="Address">Address</div>
+    <div class="step" draggable="true" id="Packet">Packet</div>
+    <div class="step" draggable="true" id="Route">Route</div>
+    <div class="step" draggable="true" id="Unpack">Unpack</div>
+    <div class="step" draggable="true" id="Response">Response</div>
+  </div>
+
+  <hr/>
+
+  <div class="container" id="dropzones">
+    <div class="box" data-answer="Protocol">Rules for communication</div>
+    <div class="box" data-answer="Request">Start the communication</div>
+    <div class="box" data-answer="Address">Find the target device</div>
+    <div class="box" data-answer="Packet">Break data into packets</div>
+    <div class="box" data-answer="Route">Choose the best path</div>
+    <div class="box" data-answer="Unpack">Put packets back together</div>
+    <div class="box" data-answer="Response">Send a reply or confirmation</div>
+  </div>
+
+  <script>
+    const steps = document.querySelectorAll('.step');
+    const boxes = document.querySelectorAll('.box');
+
+    steps.forEach(step => {
+      step.addEventListener('dragstart', e => {
+        e.dataTransfer.setData('text/plain', e.target.id);
+      });
+    });
+
+    boxes.forEach(box => {
+      box.addEventListener('dragover', e => e.preventDefault());
+      box.addEventListener('drop', e => {
+        const draggedId = e.dataTransfer.getData('text/plain');
+        if (draggedId === box.dataset.answer) {
+          box.textContent = `${draggedId} â`;
+          box.classList.add('correct');
+          const draggedEl = document.getElementById(draggedId);
+          draggedEl.remove();
+        } else {
+          box.textContent += ' â';
+          setTimeout(() => {
+            box.textContent = box.dataset.answer;
+          }, 1000);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
